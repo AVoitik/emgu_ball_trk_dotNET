@@ -1,7 +1,4 @@
-﻿//Alex Voitik
-//ball tracker
-
-using Emgu.CV;
+﻿using Emgu.CV;
 using Emgu.CV.UI;
 using Emgu.CV.Structure;
 using System.Drawing;
