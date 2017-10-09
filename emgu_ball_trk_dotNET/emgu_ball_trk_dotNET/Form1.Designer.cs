@@ -43,13 +43,27 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.thr_radio = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.ballDetect = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.play_butt = new System.Windows.Forms.Button();
             this.pause_butt = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.obj_count = new System.Windows.Forms.Label();
+            this.spX = new System.Windows.Forms.Label();
+            this.spY = new System.Windows.Forms.Label();
+            this.spT = new System.Windows.Forms.Label();
+            this.dX = new System.Windows.Forms.Label();
+            this.dY = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.bbh = new System.Windows.Forms.Label();
+            this.bbw = new System.Windows.Forms.Label();
+            this.bdnum = new System.Windows.Forms.Label();
+            this.speedList = new System.Windows.Forms.RichTextBox();
+            this.dump_velo = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // start_button
@@ -95,7 +109,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(74, 37);
+            this.label1.Location = new System.Drawing.Point(9, 37);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 17);
             this.label1.TabIndex = 8;
@@ -180,6 +194,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.ballDetect);
             this.groupBox2.Controls.Add(this.checkBox1);
             this.groupBox2.Location = new System.Drawing.Point(456, 230);
             this.groupBox2.Name = "groupBox2";
@@ -187,10 +202,20 @@
             this.groupBox2.TabIndex = 15;
             this.groupBox2.TabStop = false;
             // 
+            // ballDetect
+            // 
+            this.ballDetect.AutoSize = true;
+            this.ballDetect.Location = new System.Drawing.Point(6, 39);
+            this.ballDetect.Name = "ballDetect";
+            this.ballDetect.Size = new System.Drawing.Size(114, 21);
+            this.ballDetect.TabIndex = 1;
+            this.ballDetect.Text = "Ball Detected";
+            this.ballDetect.UseVisualStyleBackColor = true;
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(8, 21);
+            this.checkBox1.Location = new System.Drawing.Point(7, 12);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(155, 21);
             this.checkBox1.TabIndex = 0;
@@ -221,6 +246,117 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick_1);
             // 
+            // obj_count
+            // 
+            this.obj_count.AutoSize = true;
+            this.obj_count.Location = new System.Drawing.Point(97, 37);
+            this.obj_count.Name = "obj_count";
+            this.obj_count.Size = new System.Drawing.Size(106, 17);
+            this.obj_count.TabIndex = 18;
+            this.obj_count.Text = "Object Count: 0";
+            // 
+            // spX
+            // 
+            this.spX.AutoSize = true;
+            this.spX.Location = new System.Drawing.Point(457, 388);
+            this.spX.Name = "spX";
+            this.spX.Size = new System.Drawing.Size(70, 17);
+            this.spX.TabIndex = 19;
+            this.spX.Text = "SpeedX : ";
+            // 
+            // spY
+            // 
+            this.spY.AutoSize = true;
+            this.spY.Location = new System.Drawing.Point(460, 409);
+            this.spY.Name = "spY";
+            this.spY.Size = new System.Drawing.Size(66, 17);
+            this.spY.TabIndex = 20;
+            this.spY.Text = "SpeedY: ";
+            // 
+            // spT
+            // 
+            this.spT.AutoSize = true;
+            this.spT.Location = new System.Drawing.Point(462, 443);
+            this.spT.Name = "spT";
+            this.spT.Size = new System.Drawing.Size(91, 17);
+            this.spT.TabIndex = 21;
+            this.spT.Text = "Final Speed: ";
+            // 
+            // dX
+            // 
+            this.dX.AutoSize = true;
+            this.dX.Location = new System.Drawing.Point(555, 303);
+            this.dX.Name = "dX";
+            this.dX.Size = new System.Drawing.Size(48, 17);
+            this.dX.TabIndex = 22;
+            this.dX.Text = "deltaX";
+            // 
+            // dY
+            // 
+            this.dY.AutoSize = true;
+            this.dY.Location = new System.Drawing.Point(555, 345);
+            this.dY.Name = "dY";
+            this.dY.Size = new System.Drawing.Size(50, 17);
+            this.dY.TabIndex = 23;
+            this.dY.Text = "DeltaY";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.bdnum);
+            this.groupBox3.Controls.Add(this.bbw);
+            this.groupBox3.Controls.Add(this.bbh);
+            this.groupBox3.Location = new System.Drawing.Point(631, 57);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(157, 233);
+            this.groupBox3.TabIndex = 24;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "BBH & W";
+            // 
+            // bbh
+            // 
+            this.bbh.AutoSize = true;
+            this.bbh.Location = new System.Drawing.Point(7, 37);
+            this.bbh.Name = "bbh";
+            this.bbh.Size = new System.Drawing.Size(57, 17);
+            this.bbh.TabIndex = 0;
+            this.bbh.Text = "Height: ";
+            // 
+            // bbw
+            // 
+            this.bbw.AutoSize = true;
+            this.bbw.Location = new System.Drawing.Point(6, 64);
+            this.bbw.Name = "bbw";
+            this.bbw.Size = new System.Drawing.Size(52, 17);
+            this.bbw.TabIndex = 1;
+            this.bbw.Text = "Width: ";
+            // 
+            // bdnum
+            // 
+            this.bdnum.AutoSize = true;
+            this.bdnum.Location = new System.Drawing.Point(6, 93);
+            this.bdnum.Name = "bdnum";
+            this.bdnum.Size = new System.Drawing.Size(64, 17);
+            this.bdnum.TabIndex = 2;
+            this.bdnum.Text = "BDNum: ";
+            // 
+            // speedList
+            // 
+            this.speedList.Location = new System.Drawing.Point(631, 297);
+            this.speedList.Name = "speedList";
+            this.speedList.Size = new System.Drawing.Size(157, 190);
+            this.speedList.TabIndex = 25;
+            this.speedList.Text = "";
+            // 
+            // dump_velo
+            // 
+            this.dump_velo.Location = new System.Drawing.Point(608, 12);
+            this.dump_velo.Name = "dump_velo";
+            this.dump_velo.Size = new System.Drawing.Size(93, 36);
+            this.dump_velo.TabIndex = 26;
+            this.dump_velo.Text = "Dump";
+            this.dump_velo.UseVisualStyleBackColor = true;
+            this.dump_velo.Click += new System.EventHandler(this.dump_velo_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -229,6 +365,15 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(1109, 499);
             this.ControlBox = false;
+            this.Controls.Add(this.dump_velo);
+            this.Controls.Add(this.speedList);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.dY);
+            this.Controls.Add(this.dX);
+            this.Controls.Add(this.spT);
+            this.Controls.Add(this.spY);
+            this.Controls.Add(this.spX);
+            this.Controls.Add(this.obj_count);
             this.Controls.Add(this.pause_butt);
             this.Controls.Add(this.play_butt);
             this.Controls.Add(this.groupBox2);
@@ -248,6 +393,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -272,6 +419,19 @@
         private System.Windows.Forms.Button play_butt;
         private System.Windows.Forms.Button pause_butt;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Label obj_count;
+        private System.Windows.Forms.Label spX;
+        private System.Windows.Forms.Label spY;
+        private System.Windows.Forms.Label spT;
+        private System.Windows.Forms.CheckBox ballDetect;
+        private System.Windows.Forms.Label dX;
+        private System.Windows.Forms.Label dY;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label bbw;
+        private System.Windows.Forms.Label bbh;
+        private System.Windows.Forms.Label bdnum;
+        private System.Windows.Forms.RichTextBox speedList;
+        private System.Windows.Forms.Button dump_velo;
     }
 }
 

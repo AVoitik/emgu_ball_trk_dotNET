@@ -6,7 +6,9 @@ using System.Windows.Forms;
 using System;
 using Emgu.CV.CvEnum;
 using Emgu.CV.Util;
+
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Collections.Generic;
 
 namespace emgu_ball_trk_dotNET
 {
@@ -14,7 +16,7 @@ namespace emgu_ball_trk_dotNET
 
     public partial class Form1 : Form
     {
-        private bool videoPause = true;
+        //private bool videoPause = true;
 
         private VideoCapture vc = null;
         private bool cp = false;
@@ -36,6 +38,8 @@ namespace emgu_ball_trk_dotNET
 
         private Image<Bgr, Byte> img3;
 
+        private List<double> veloList = new List<double>();
+
         private int frameCounter = 1;
         private double frameNumber;
 
@@ -45,7 +49,7 @@ namespace emgu_ball_trk_dotNET
         public Form1()
         {
             InitializeComponent();
-            timer1.Interval = 50;
+            timer1.Interval = 5;
             timer1.Tick += timer1_Tick_1;
             //don't want to use openCL
             CvInvoke.UseOpenCL = false;
@@ -59,8 +63,6 @@ namespace emgu_ball_trk_dotNET
             {
                 vc = new VideoCapture(file_box.Text);
                 frameNumber = vc.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount);
-                
-
             }
             catch (NullReferenceException excpt)
             {
@@ -110,8 +112,8 @@ namespace emgu_ball_trk_dotNET
                 
                 MCvMoments mom = new MCvMoments();
                 VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
-                CvInvoke.FindContours(thrCpy, contours, null, Emgu.CV.CvEnum.RetrType.List, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple);
-
+                CvInvoke.FindContours(thrCpy, contours, null, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple);
+                int objcnt = 0;
                 for (int i = 0; i < contours.Size; i++)
                 {
                     mom = CvInvoke.Moments(contours[i]);
@@ -124,15 +126,18 @@ namespace emgu_ball_trk_dotNET
 
                         pointRect = CvInvoke.BoundingRectangle(contours[i]);
 
-                        if (pointRect.Height > 6 && pointRect.Width > 6)
+                        if (pointRect.Height > 100 && pointRect.Width > 30)
                         {
+                            //bbh.Text = "Height: " + pointRect.Height.ToString();
+                            //bbw.Text = "Width: " + pointRect.Width.ToString();
                             int deltaX = (pointRect.X + (pointRect.Width / 2) - oldX);
                             int deltaY = (pointRect.Y + (pointRect.Height / 2) - oldY);
+                            
 
                             if (((pointRect.X > 16) || (pointRect.X > 496)) && ((pointRect.Y > 16) || (pointRect.Y > 624)))
                             {
-
-                                
+                                objcnt = objcnt + 1;
+                                //obj_count.Text = objcnt.ToString();
                                 int bd;
 
                                 if (pointRect.Width > pointRect.Height)
@@ -148,25 +153,26 @@ namespace emgu_ball_trk_dotNET
                                     bd = pointRect.Width;
                                     bd = (int)((bd + 1) / 2);
                                 }
-                                Console.Write(bd);
+                                //bdnum.Text = "BD: " + bd.ToString();
+                                //Console.Write(bd);
                                 MCvScalar color = new MCvScalar(0, 0, 255);
 
                                 //put a brectangle around the contour
-                                if(checkBox1.Checked)
+                                if (checkBox1.Checked)
                                 {
                                     if (colorVid.Checked)
                                     {
                                         CvInvoke.Rectangle(fr, pointRect, color, 2);
                                     }
-                                    if(diffRadio.Checked)
+                                    if (diffRadio.Checked)
                                     {
                                         CvInvoke.Rectangle(diff, pointRect, color, 2);
                                     }
-                                    if(grayVid.Checked)
+                                    if (grayVid.Checked)
                                     {
                                         CvInvoke.Rectangle(gf, pointRect, color, 2);
                                     }
-                                    if(thr_radio.Checked)
+                                    if (thr_radio.Checked)
                                     {
                                         CvInvoke.Rectangle(thrNew, pointRect, color, 2);
                                     }
@@ -175,30 +181,59 @@ namespace emgu_ball_trk_dotNET
                                 double pixPerIn = pointRect.Height / 2.9;
 
                                 double speedX = (((3600 * 120) * (deltaX / pixPerIn)) / (12 * 5280));
+                                //spX.Text = speedX.ToString();
                                 double speedY = (((3600 * 120) * (deltaY / pixPerIn)) / (12 * 5280));
+                                //spY.Text = speedY.ToString();
+                                //double totalSpeed = Math.Sqrt((Math.Pow(speedX, 2) + Math.Pow(speedY, 2)));
+                                double findDiag = Math.Sqrt((Math.Pow(pointRect.Height, 2) + Math.Pow(pointRect.Width, 2)));
+                                double totalSpeed = (findDiag / 6.3);
+                                
+                                //spT.Text = speedY.ToString();
 
+                                if ((speedX < totalSpeed) && (speedX > 10) && (pointRect.Height < 600) && (pointRect.Height > 200) && (pointRect.Width < 100) && (pointRect.Width > 40) && (deltaX < 1000))
+                                {
+                                    //MessageBox.Show(deltaX.ToString());
+                                    //dX.Text = deltaX.ToString();
+                                   // dY.Text = deltaY.ToString();
+                                    //ballDetect.Checked = true;
+                                    //spT.Text = totalSpeed.ToString();
+                                    veloList.Add(totalSpeed);
+                                    speedList.AppendText(totalSpeed.ToString() + "\n");
+                                }
+                                else
+                                {
+                                    //dX.Text = "";
+                                    //dY.Text = "";
+                                    //spT.Text = "";
+                                    //ballDetect.Checked = false;
+                                }
                                 double zPos = ((((4 * 73.62 * 720) / (pointRect.Height * 3.60)) / 25.4) / 2);
+                                //bdnum.Text = zPos.ToString();
                             }
                         }
                     }
+                    //else
+                    //{
+                    //    ballDetect.Checked = false;
+                    //}
                 }
                
-                if (diffRadio.Checked)
-                {
-                    imageBox1.Image = diff;
-                }
-                else if (grayVid.Checked)
-                {
-                    imageBox1.Image = gf;
-                }
-                else if(colorVid.Checked)
-                {
-                    imageBox1.Image = fr;
-                }
-                else if(thr_radio.Checked)
-                {
-                    imageBox1.Image = thrNew;
-                }
+                //if (diffRadio.Checked)
+                //{
+                //    imageBox1.Image = diff;
+                //}
+                //else if (grayVid.Checked)
+                //{
+                //    imageBox1.Image = gf;
+                //}
+                //else if(colorVid.Checked)
+                //{
+                //    imageBox1.Image = fr;
+                //}
+                //else if(thr_radio.Checked)
+                //{
+                //    imageBox1.Image = thrNew;
+                //}
             }
         }
     
@@ -284,20 +319,36 @@ namespace emgu_ball_trk_dotNET
         {
             if(vc.Grab())
             {
-                vc.Retrieve(playVideo, 0);
-                img3 = playVideo.ToImage<Bgr, Byte>();
-                imageBox1.Image = img3;
-                frameCounter = frameCounter + 1;
                 labelText = "Frame: " + frameCounter + "/" + frameNumber;
                 label1.Text = labelText;
+                vc.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.PosFrames, frameCounter);
+                //vc.Retrieve(playVideo, 0);
+                ProcessFrame();
+                //img3 = playVideo.ToImage<Bgr, Byte>();
+                //imageBox1.Image = img3;
+                //frameCounter = frameCounter + 1;
+                //labelText = "Frame: " + frameCounter + "/" + frameNumber;
+                //label1.Text = labelText;
             }
             else
             {
+                
                 pause_butt.PerformClick();
+                dump_velo.PerformClick();
                 play_butt.Enabled = false;
                
             }
             
+        }
+
+        private void dump_velo_Click(object sender, EventArgs e)
+        {
+            var numCount = veloList.Count;
+
+            double finalSpeed1 = veloList[numCount - 1];
+            double finalSpeed2 = veloList[numCount - 2];
+
+            MessageBox.Show("Speed: " + finalSpeed1);
         }
     }
 }
